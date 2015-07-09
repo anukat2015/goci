@@ -17,6 +17,7 @@ public class OntologyConstants {
     // Class IRIs
     public static final String STUDY_CLASS_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/Study";
     public static final String TRAIT_ASSOCIATION_CLASS_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/TraitAssociation";
+    public static final String ETHNICITY_CLASS_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/Ethnicity";
     public static final String SNP_CLASS_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/SingleNucleotidePolymorphism";
     public static final String CYTOGENIC_REGION_CLASS_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/CytogeneticRegion";
     public static final String CHROMOSOME_CLASS_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/Chromosome";
@@ -24,6 +25,7 @@ public class OntologyConstants {
 
     // Data Property IRIs
     public static final String HAS_AUTHOR_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_author";
+    public static final String HAS_SNP_COUNT_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_snp_count";
     public static final String HAS_BP_POSITION_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_basepair_position";
     public static final String HAS_GWAS_TRAIT_NAME_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_gwas_trait_name";
     public static final String HAS_LENGTH_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_length";
@@ -32,6 +34,9 @@ public class OntologyConstants {
     public static final String HAS_PUBLICATION_DATE_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_publication_date";
     public static final String HAS_PUBMED_ID_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_pubmed_id";
     public static final String HAS_SNP_REFERENCE_ID_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_snp_reference_id";
+    public static final String HAS_ETHNIC_GROUP_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_ethnic_group";
+    public static final String HAS_NUMBER_OF_INDIVIDUALS_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_number_of_individuals";
+    public static final String HAS_TYPE_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/has_type";
 
     // Object Property IRIs
     public static final String ASSOCIATED_WITH_PROPERTY_IRI = GWAS_ONTOLOGY_SCHEMA_IRI + "/associated_with";

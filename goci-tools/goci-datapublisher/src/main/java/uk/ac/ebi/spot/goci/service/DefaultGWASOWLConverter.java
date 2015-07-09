@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.OWLConversionException;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.utils.OntologyConstants;
 import uk.ac.ebi.spot.goci.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
@@ -20,6 +22,7 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.utils.ReflexiveIRIMinter;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -37,6 +40,8 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
 
     private OntologyLoader ontologyLoader;
 
+    private EthnicityRepository ethnicityRepository;
+
     private ReflexiveIRIMinter minter;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -46,10 +51,13 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
     }
 
     @Autowired
-    public DefaultGWASOWLConverter(OntologyLoader ontologyLoader) {
+    public DefaultGWASOWLConverter(OntologyLoader ontologyLoader, EthnicityRepository ethnicityRepository) {
         this.ontologyLoader = ontologyLoader;
+        this.ethnicityRepository = ethnicityRepository;
         this.minter = new ReflexiveIRIMinter();
     }
+
+    public EthnicityRepository getEthnicityRepository(){return ethnicityRepository;}
 
 //    public void setConfiguration(OntologyConfiguration configuration) {
 //        this.configuration = configuration;
@@ -100,9 +108,10 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         }
     }
 
-    public void addStudiesToOntology(Collection<Study> studies, OWLOntology ontology) {
+    public void addStudiesToOntology(Collection<Study> studies,  OWLOntology ontology) {
         for (Study study : studies) {
-            convertStudy(study, ontology);
+            Collection<Ethnicity> ethnicities = getEthnicityRepository().findByStudyId(study.getId());
+            convertStudy(study,ethnicities, ontology);
         }
     }
 
@@ -112,6 +121,16 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         }
     }
 
+
+    public void addEthnicitiesToOntology(Collection<Ethnicity> ethnicities, OWLOntology ontology) {
+        // the set of warnings that were issued during mappings
+        Set<String> issuedWarnings = new HashSet<String>();
+        for (Ethnicity ethnicity : ethnicities) {
+            convertEthnicity(ethnicity, ontology, issuedWarnings);
+        }
+    }
+
+
     public void addAssociationsToOntology(Collection<Association> associations, OWLOntology ontology) {
         // the set of warnings that were issued during mappings
         Set<String> issuedWarnings = new HashSet<String>();
@@ -120,7 +139,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         }
     }
 
-    protected void convertStudy(Study study, OWLOntology ontology) {
+    protected void convertStudy(Study study, Collection<Ethnicity> ethnicities, OWLOntology ontology) {
         // get the study class
         OWLClass studyCls = getDataFactory().getOWLClass(IRI.create(OntologyConstants.STUDY_CLASS_IRI));
 
@@ -137,6 +156,8 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         // get datatype relations
         OWLDataProperty has_author = getDataFactory().getOWLDataProperty(
                 IRI.create(OntologyConstants.HAS_AUTHOR_PROPERTY_IRI));
+        OWLDataProperty has_snp_count = getDataFactory().getOWLDataProperty(
+                IRI.create(OntologyConstants.HAS_SNP_COUNT_PROPERTY_IRI));
         OWLDataProperty has_publication_date = getDataFactory().getOWLDataProperty(
                 IRI.create(OntologyConstants.HAS_PUBLICATION_DATE_PROPERTY_IRI));
         OWLDataProperty has_pubmed_id = getDataFactory().getOWLDataProperty(
@@ -145,6 +166,16 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         // get annotation relations
         OWLAnnotationProperty rdfsLabel =
                 getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+
+
+        // assert snp count relation
+        if(study.getArrayInfo() != null && study.getArrayInfo().getSnpCount() != null) {
+            OWLLiteral snpCount = getDataFactory().getOWLLiteral(study.getArrayInfo().getSnpCount());
+            OWLDataPropertyAssertionAxiom snp_count_relation =
+                    getDataFactory().getOWLDataPropertyAssertionAxiom(has_snp_count, studyIndiv, snpCount);
+            AddAxiom add_snp_count = new AddAxiom(ontology, snp_count_relation);
+            getManager().applyChange(add_snp_count);
+        }
 
         // assert author relation
         OWLLiteral author = getDataFactory().getOWLLiteral(study.getAuthor());
@@ -211,6 +242,24 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                     getDataFactory().getOWLObjectPropertyAssertionAxiom(part_of, taIndiv, studyIndiv);
             AddAxiom addAxiomChangeRev = new AddAxiom(ontology, is_part_of_relation);
             getManager().applyChange(addAxiomChangeRev);
+
+        }
+
+        for(Ethnicity ethnicity : ethnicities){
+            IRI traitIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, ethnicity);
+            OWLNamedIndividual ethnicityIndiv = getDataFactory().getOWLNamedIndividual(traitIRI);
+            // assert relation
+            OWLObjectPropertyAssertionAxiom has_part_relation =
+                    getDataFactory().getOWLObjectPropertyAssertionAxiom(has_part, studyIndiv, ethnicityIndiv);
+            AddAxiom addAxiomChange = new AddAxiom(ontology, has_part_relation);
+            getManager().applyChange(addAxiomChange);
+
+            OWLObjectPropertyAssertionAxiom is_part_of_relation =
+                    getDataFactory().getOWLObjectPropertyAssertionAxiom(part_of, ethnicityIndiv, studyIndiv);
+            AddAxiom addAxiomChangeRev = new AddAxiom(ontology, is_part_of_relation);
+            getManager().applyChange(addAxiomChangeRev);
+
+
 
         }
     }
@@ -379,6 +428,69 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         }
 
     }
+
+
+    protected void convertEthnicity(Ethnicity ethnicity,OWLOntology ontology,Set<String>  issuedWarnings){
+        // get the ethnicity class
+        OWLClass ethnicityClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.ETHNICITY_CLASS_IRI));
+        IRI ethnicityIndIRI = getMinter().mint(OntologyConstants.GWAS_ONTOLOGY_BASE_IRI, ethnicity);
+
+
+        // create a new ethnicity instance
+        OWLNamedIndividual ethnicityIndiv = getDataFactory().getOWLNamedIndividual(ethnicityIndIRI);
+
+        // assert class membership
+        OWLClassAssertionAxiom classAssertion = getDataFactory().getOWLClassAssertionAxiom(ethnicityClass, ethnicityIndiv);
+        getManager().addAxiom(ontology, classAssertion);
+
+        // get datatype relations
+        OWLDataProperty has_type = getDataFactory().getOWLDataProperty(
+                IRI.create(OntologyConstants.HAS_TYPE_PROPERTY_IRI));
+        OWLDataProperty has_number_of_individuals = getDataFactory().getOWLDataProperty(
+                IRI.create(OntologyConstants.HAS_NUMBER_OF_INDIVIDUALS_PROPERTY_IRI));
+        OWLDataProperty has_ethnic_group = getDataFactory().getOWLDataProperty(
+                IRI.create(OntologyConstants.HAS_ETHNIC_GROUP_PROPERTY_IRI));
+
+        // get annotation relations
+        OWLAnnotationProperty rdfsLabel =
+                getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+
+
+        if(ethnicity.getEthnicGroup() != null){
+            OWLLiteral ethnicGroup = getDataFactory().getOWLLiteral(ethnicity.getEthnicGroup());
+            OWLDataPropertyAssertionAxiom ethnic_group_relation =
+                    getDataFactory().getOWLDataPropertyAssertionAxiom(has_ethnic_group, ethnicityIndiv, ethnicGroup);
+            AddAxiom add_ethnic_group = new AddAxiom(ontology, ethnic_group_relation);
+            getManager().applyChange(add_ethnic_group);
+        }
+
+        if(ethnicity.getNumberOfIndividuals() != null){
+            OWLLiteral numberOfIndividuals = getDataFactory().getOWLLiteral(ethnicity.getNumberOfIndividuals());
+            OWLDataPropertyAssertionAxiom number_of_individuals_relation =
+                    getDataFactory().getOWLDataPropertyAssertionAxiom(has_number_of_individuals, ethnicityIndiv, numberOfIndividuals);
+            AddAxiom add_number_of_individuals = new AddAxiom(ontology, number_of_individuals_relation);
+            getManager().applyChange(add_number_of_individuals);
+        }
+
+        if(ethnicity.getType() != null){
+            OWLLiteral type = getDataFactory().getOWLLiteral(ethnicity.getType());
+            OWLDataPropertyAssertionAxiom type_relation =
+                    getDataFactory().getOWLDataPropertyAssertionAxiom(has_type, ethnicityIndiv, type);
+            AddAxiom add_type = new AddAxiom(ontology, type_relation);
+            getManager().applyChange(add_type);
+        }
+
+        OWLLiteral label = getDataFactory().getOWLLiteral(
+                 ethnicity.getNumberOfIndividuals() + " individuals from " +
+                         ethnicity.getEthnicGroup() + " ethnic group in " + ethnicity.getType() + " group.");
+
+        OWLAnnotationAssertionAxiom label_annotation =
+                getDataFactory().getOWLAnnotationAssertionAxiom(rdfsLabel, ethnicityIndiv.getIRI(), label);
+        AddAxiom add_band_label = new AddAxiom(ontology, label_annotation);
+        getManager().applyChange(add_band_label);
+
+    }
+
 
     protected void convertAssociation(Association association, OWLOntology ontology, Set<String> issuedWarnings) {
         // get the trait association class

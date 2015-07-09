@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.semanticweb.owlapi.model.OWLOntology;
 import uk.ac.ebi.spot.goci.exception.OWLConversionException;
+import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 
@@ -57,4 +58,14 @@ public interface GWASOWLConverter {
      */
     void addAssociationsToOntology(Collection<Association> associations, OWLOntology ontology)
             throws OWLConversionException;
+
+    /**
+     * Converts the provided ethnicities into ontology entities and adds them to the supplied ontology.
+     * @param ethnicities the ethnicities retrieved from the GWAS catalog
+     * @param ontology the ontology to write the enthnicities to
+     * @throws OWLConversionException if something went wrong whilst adding data to the ontology
+     */
+    void addEthnicitiesToOntology(Collection<Ethnicity> ethnicities, OWLOntology ontology)
+            throws OWLConversionException;
+
 }

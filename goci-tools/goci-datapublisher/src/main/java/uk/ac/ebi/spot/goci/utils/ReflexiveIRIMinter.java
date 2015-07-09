@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import org.semanticweb.owlapi.model.IRI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import javax.persistence.Id;
 import java.io.UnsupportedEncodingException;
@@ -38,7 +39,13 @@ public class ReflexiveIRIMinter implements IRIMinter<Object> {
     public IRI mint(String base, Object o) {
         // derive the prefix (which is the object type)
         String prefix = getObjectType(o);
-        String objectName = inspectObjectForID(o);
+        String objectName;
+        //In the case the object is a SNP we don't want to use the internal gwas db snp id but the snp rs id.
+        if( SingleNucleotidePolymorphism.class.equals(o.getClass())){
+            objectName = ((SingleNucleotidePolymorphism)o).getRsId();
+        } else {
+            objectName = inspectObjectForID(o);
+        }
         return mint(base, prefix, objectName);
     }
 

@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Date;
 
@@ -77,6 +78,9 @@ public class Study {
     @OneToOne
     private Housekeeping housekeeping;
 
+    @OneToOne
+    private ArrayInfo arrayInfo;
+
     @OneToOne(mappedBy = "study", cascade = CascadeType.REMOVE)
     private StudyReport studyReport;
 
@@ -85,7 +89,7 @@ public class Study {
     }
 
 
-    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Housekeeping housekeeping) {
+    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Housekeeping housekeeping, ArrayInfo arrayInfo) {
         this.author = author;
         this.publicationDate = publicationDate;
         this.publication = publication;
@@ -101,6 +105,7 @@ public class Study {
         this.efoTraits = efoTraits;
         this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.housekeeping = housekeeping;
+        this.arrayInfo = arrayInfo;
     }
 
     public Long getId() {
@@ -238,6 +243,10 @@ public class Study {
     public void setHousekeeping(Housekeeping housekeeping) {
         this.housekeeping = housekeeping;
     }
+
+    public ArrayInfo getArrayInfo(){ return arrayInfo;    }
+
+    public void setArrayInfo(ArrayInfo arrayInfo) {this.arrayInfo = arrayInfo; }
 
     public StudyReport getStudyReport() {
         return studyReport;

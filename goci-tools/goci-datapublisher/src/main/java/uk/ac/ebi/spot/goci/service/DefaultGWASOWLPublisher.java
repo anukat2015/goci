@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.OWLConversionException;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.utils.FilterProperties;
@@ -42,6 +44,8 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     private StudyRepository studyRepository;
     private StudyService studyService;
 
+    private EthnicityRepository ethnicityRepository;
+
     private AssociationRepository associationRepository;
     private AssociationService associationService;
 
@@ -56,11 +60,13 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     @Autowired
     public DefaultGWASOWLPublisher(StudyService studyService,
                                    AssociationService associationService,
+                                   EthnicityRepository ethnicityRepository,
                                    SingleNucleotidePolymorphismService singleNucleotidePolymorphismService,
                                    GWASOWLConverter converter,
                                    OntologyLoader ontologyLoader){
         this.studyService = studyService;
         this.associationService = associationService;
+        this.ethnicityRepository = ethnicityRepository;
         this.singleNucleotidePolymorphismService = singleNucleotidePolymorphismService;
         this.converter = converter;
         this.ontologyLoader = ontologyLoader;
@@ -101,6 +107,8 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
     }
 
 
+    public EthnicityRepository getEthnicityRepository(){return ethnicityRepository;}
+
 
     public SingleNucleotidePolymorphismRepository getSingleNucleotidePolymorphismRepository() {
         return singleNucleotidePolymorphismRepository;
@@ -129,6 +137,9 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         getLog().debug("Fetching studies that require conversion to OWL using StudyRepository...");
 
         Collection<Study> studies = getStudyService().deepFindPublishedStudies();
+
+        Collection<Ethnicity> ethnicities = getEthnicityRepository().findAll();
+
 
         //TODO : check with Tony probably better to do it at the Repository/Service level
         //Discard studies which are not associated with a disease trait and those which haven't been published yet
@@ -207,6 +218,8 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             getConverter().addSNPsToOntology(snps, conversion);
             getLog().debug("Converting Trait Associations...");
             getConverter().addAssociationsToOntology(traitAssociations, conversion);
+            getLog().debug("Converting Ethnicities...");
+            getConverter().addEthnicitiesToOntology(ethnicities, conversion);
             getLog().debug("Converting Studies...");
             getConverter().addStudiesToOntology(studies, conversion);
             getLog().debug("All conversion done!");

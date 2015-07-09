@@ -33,19 +33,18 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    <AnnotationProperty rdf:about="&efo;definition"/>
-    <AnnotationProperty rdf:about="&efo;definition_editor"/>
     
 
 
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Datatypes
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
+    <!-- http://www.ebi.ac.uk/efo/definition -->
 
+    <AnnotationProperty rdf:about="&efo;definition"/>
+    
+
+
+    <!-- http://www.ebi.ac.uk/efo/definition_editor -->
+
+    <AnnotationProperty rdf:about="&efo;definition_editor"/>
     
 
 
@@ -57,6 +56,12 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
+    
+
+
+    <!-- http://purl.obolibrary.org/obo/IAO_0000136 -->
+
+    <ObjectProperty rdf:about="&obo;IAO_0000136"/>
     
 
 
@@ -76,7 +81,25 @@
     
 
 
-    <!--
+    <!-- http://www.obofoundry.org/ro/ro.owl#has_part -->
+
+    <ObjectProperty rdf:about="&ro;has_part"/>
+    
+
+
+    <!-- http://www.obofoundry.org/ro/ro.owl#located_in -->
+
+    <ObjectProperty rdf:about="&ro;located_in"/>
+    
+
+
+    <!-- http://www.obofoundry.org/ro/ro.owl#part_of -->
+
+    <ObjectProperty rdf:about="&ro;part_of"/>
+    
+
+
+    <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Data properties
@@ -107,6 +130,16 @@
     
 
 
+    <!-- http://rdf.ebi.ac.uk/terms/gwas/has_ethnic_group -->
+
+    <DatatypeProperty rdf:about="&gwas;has_ethnic_group">
+        <rdfs:label xml:lang="en">has_ethnic_group</rdfs:label>
+        <efo:definition_editor xml:lang="en">Catherine Leroy</efo:definition_editor>
+        <efo:definition xml:lang="en">The ethnic group for a given ethnicity (eg. : European, East Asian).</efo:definition>
+    </DatatypeProperty>
+    
+
+
     <!-- http://rdf.ebi.ac.uk/terms/gwas/has_gwas_trait_name -->
 
     <DatatypeProperty rdf:about="&gwas;has_gwas_trait_name">
@@ -121,8 +154,8 @@
 
     <DatatypeProperty rdf:about="&gwas;has_length">
         <rdfs:label xml:lang="en">has_length</rdfs:label>
-        <efo:definition_editor>Tony Burdett</efo:definition_editor>
         <efo:definition xml:lang="en">The length, in base pairs, of any genomic element.</efo:definition>
+        <efo:definition_editor>Tony Burdett</efo:definition_editor>
     </DatatypeProperty>
     
 
@@ -131,6 +164,16 @@
 
     <DatatypeProperty rdf:about="&gwas;has_name">
         <rdfs:label xml:lang="en">has_name</rdfs:label>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://rdf.ebi.ac.uk/terms/gwas/has_number_of_individuals -->
+
+    <DatatypeProperty rdf:about="&gwas;has_number_of_individuals">
+        <rdfs:label xml:lang="en">has_number_of_individuals</rdfs:label>
+        <efo:definition_editor xml:lang="en">Catherine Leroy</efo:definition_editor>
+        <efo:definition xml:lang="en">The number of individuals for a given ethnicity.</efo:definition>
     </DatatypeProperty>
     
 
@@ -164,12 +207,32 @@
     
 
 
+    <!-- http://rdf.ebi.ac.uk/terms/gwas/has_snp_count -->
+
+    <DatatypeProperty rdf:about="&gwas;has_snp_count">
+        <rdfs:label xml:lang="en">has_snp_count</rdfs:label>
+        <efo:definition_editor xml:lang="en">Catherine Leroy</efo:definition_editor>
+        <efo:definition xml:lang="en">The number of snp in a given study.</efo:definition>
+    </DatatypeProperty>
+    
+
+
     <!-- http://rdf.ebi.ac.uk/terms/gwas/has_snp_reference_id -->
 
     <DatatypeProperty rdf:about="&gwas;has_snp_reference_id">
         <rdfs:label xml:lang="en">has_snp_reference_id</rdfs:label>
         <efo:definition xml:lang="en">A single nucleotide polymorpism identifier, as assigned by the Single Nucleotide Polymorphism Database (dbSNP).</efo:definition>
         <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://rdf.ebi.ac.uk/terms/gwas/has_type -->
+
+    <DatatypeProperty rdf:about="&gwas;has_type">
+        <rdfs:label xml:lang="en">has_type</rdfs:label>
+        <efo:definition_editor xml:lang="en">Catherine Leroy</efo:definition_editor>
+        <efo:definition xml:lang="en">The type of a given ethnicity ( eg. : replication, initial).</efo:definition>
     </DatatypeProperty>
     
 
@@ -427,6 +490,22 @@
     
 
 
+    <!-- http://rdf.ebi.ac.uk/terms/gwas/Ethnicity -->
+
+    <Class rdf:about="&gwas;Ethnicity">
+        <rdfs:label xml:lang="en">ethnicity</rdfs:label>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&ro;part_of"/>
+                <someValuesFrom rdf:resource="&gwas;Study"/>
+            </Restriction>
+        </rdfs:subClassOf>
+        <efo:definition xml:lang="en">The information about the part or all of the individuals used in the study.</efo:definition>
+        <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
+    </Class>
+    
+
+
     <!-- http://rdf.ebi.ac.uk/terms/gwas/SingleNucleotidePolymorphism -->
 
     <Class rdf:about="&gwas;SingleNucleotidePolymorphism">
@@ -453,6 +532,12 @@
                 <someValuesFrom rdf:resource="&gwas;TraitAssociation"/>
             </Restriction>
         </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&ro;has_part"/>
+                <someValuesFrom rdf:resource="&gwas;Ethnicity"/>
+            </Restriction>
+        </rdfs:subClassOf>
         <efo:definition xml:lang="en">A study, described by a scientific publication, that identifies genome wide associations between single nucleotide polymorphisms and phylogenetic traits or disorders.</efo:definition>
         <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
     </Class>
@@ -463,6 +548,12 @@
 
     <Class rdf:about="&gwas;TraitAssociation">
         <rdfs:label xml:lang="en">trait association</rdfs:label>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&ro;part_of"/>
+                <someValuesFrom rdf:resource="&gwas;Study"/>
+            </Restriction>
+        </rdfs:subClassOf>
         <rdfs:subClassOf>
             <Class>
                 <intersectionOf rdf:parseType="Collection">
@@ -477,21 +568,18 @@
                 </intersectionOf>
             </Class>
         </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <Restriction>
-                <onProperty rdf:resource="&ro;part_of"/>
-                <someValuesFrom rdf:resource="&gwas;Study"/>
-            </Restriction>
-        </rdfs:subClassOf>
         <efo:definition xml:lang="en">An association that has been identified as part of a genome wide association study.  A trait association indicates that a SNP has been identified as being statistically significantly associated with a known phenotypic trait or disease at a genome-wide level.  The degree of confidence of this association can be expressed as a p-value.</efo:definition>
         <efo:definition_editor xml:lang="en">Tony Burdett</efo:definition_editor>
     </Class>
     
 
 
+    <!-- http://www.ebi.ac.uk/efo/EFO_0000001 -->
+
+    <Class rdf:about="&efo;EFO_0000001"/>
 </rdf:RDF>
 
 
 
-<!-- Generated by the OWL API (version 3.2.5.1912) http://owlapi.sourceforge.net -->
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
 
