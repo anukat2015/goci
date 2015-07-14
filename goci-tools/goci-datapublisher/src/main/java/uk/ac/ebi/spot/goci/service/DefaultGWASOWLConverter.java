@@ -128,6 +128,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         for (Ethnicity ethnicity : ethnicities) {
             convertEthnicity(ethnicity, ontology, issuedWarnings);
         }
+
     }
 
 

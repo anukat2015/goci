@@ -76,6 +76,8 @@ sparqlurl = sparqlEndPoint + "/sparql?default-graph-uri=&query=%0D%0APREFIX+rdf%
 
 sparqlresults = urllib.urlretrieve(sparqlurl, "sparql-retrieved-results.txt")
 
+#
+
 
 json = {}
 
