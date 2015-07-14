@@ -34,7 +34,7 @@ public class EmbeddableDocumentTest {
         h.setCatalogPublishDate(new Date());
         this.study = new Study("author", new Date(), "publication", "title", "initial sample size", "replicate " +
                 "sample size", "platform", "123456", false, false, false, null, Collections.<EfoTrait>emptyList(),
-                               Collections.<SingleNucleotidePolymorphism>emptyList(), h);
+                               Collections.<SingleNucleotidePolymorphism>emptyList(), h, new ArrayInfo(Long.parseLong("123"),true,null,"<","Affymetrix",Long.parseLong("1"),false, false, Long.parseLong("0"), 0));
         study.setId(1l);
         this.studyDoc = new StudyDocument(study);
 

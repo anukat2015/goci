@@ -29,7 +29,7 @@ public class ArrayInfo {
 
     public ArrayInfo(){};
 
-    public ArrayInfo(Long snpCount, Boolean imputed, String arrayName, String snpCountQualifier, String platform, Long studyId, Boolean pooled, Boolean isCnv, Long haplotypeSnpCount, int snpPerHaplotypeCount, Study study) {
+    public ArrayInfo(Long snpCount, Boolean imputed, String arrayName, String snpCountQualifier, String platform, Long studyId, Boolean pooled, Boolean isCnv, Long haplotypeSnpCount, int snpPerHaplotypeCount) {
         this.snpCount = snpCount;
         this.imputed = imputed;
         this.arrayName = arrayName;
