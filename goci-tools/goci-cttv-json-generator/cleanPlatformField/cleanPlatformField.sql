@@ -1,3 +1,65 @@
+
+
+
+CREATE TABLE "GWAS"."ARRAY_INFO"
+(
+"ID" NUMBER(19,0) NOT NULL ENABLE,
+"SNP_COUNT" NUMBER(19,0),
+"IMPUTED" NUMBER (1) ,
+"ARRAY_NAME" VARCHAR2(255 CHAR),
+"SNP_COUNT_QUALIFIER" VARCHAR2(10 CHAR),
+"PLATFORM" VARCHAR2(255 CHAR),
+"POOLED" NUMBER (1) ,
+"HAPLOTYPE_SNP_COUNT" NUMBER(19,0),
+"SNP_PER_HAPLOTYPE_COUNT" NUMBER(19,0),
+PRIMARY KEY ("ID")
+)
+
+CREATE SEQUENCE  "GWAS"."S_GWASARRAY_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE ;
+
+comment on table ARRAY_INFO is 'This is the table containing the information about the arrays used in the study'
+comment on column ARRAY_INFO.ID is 'The unique id of the table'
+comment on column ARRAY_INFO.SNP_COUNT is 'The number of snp genotyped with that array (including imputed is imputed is true)'
+comment on column ARRAY_INFO.IMPUTED is '1 means true, 0 mean false. True if the snp were imputed, false if the snp_count represents solely the snp present on the array'
+comment on column ARRAY_INFO.ARRAY_NAME is 'The manufacturer array name. It will not be used at first but maybe in the future'
+comment on column ARRAY_INFO.SNP_COUNT_QUALIFIER is 'In the paper the author doesn’t always stipulates the exact number of snp but will say "more then 100000”, in that case, 100000 will be stored in the SNP_COUNT and more will be stored as “<“ in the SNP_COUNT_QUALIFIER'
+comment on column ARRAY_INFO.PLATFORM is 'The name of the platforms used in the study  (ex : Affymetrix, Illumina…)'
+comment on column ARRAY_INFO.POOLED is '1 if the dna samples where pooled together 0 if they were not. Nothing if we don not know'
+
+alter table study
+add array_info_id NUMBER(19,0)
+
+ALTER TABLE STUDY
+ADD CONSTRAINT STUDY_ARRAY_INFO_ID_FK
+FOREIGN KEY (ARRAY_INFO_ID)
+REFERENCES ARRAY_INFO(ID)
+
+ALTER TABLE STUDY
+ADD "PLATFORM_DUPLICATE" VARCHAR2(255 CHAR)
+
+comment on column STUDY.PLATFORM_DUPLICATE is 'A duplicate of the platform column that can be modified'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 update study
 set platform = 'Illumina [11,133,962] (Imputed)'
 where platform = 'Ilumina [11,133,962] (Imputed)'
@@ -47,45 +109,15 @@ set platform = 'Illumina [NR]'
 where platform = 'Ilumina [NR]'
 
 
-CREATE TABLE "GWAS"."ARRAY_INFO"
-(
-"ID" NUMBER(19,0) NOT NULL ENABLE,
-"SNP_COUNT" NUMBER(19,0),
-"IMPUTED" NUMBER (1) ,
-"ARRAY_NAME" VARCHAR2(255 CHAR),
-"SNP_COUNT_QUALIFIER" VARCHAR2(10 CHAR),
-"PLATFORM" VARCHAR2(255 CHAR),
-"POOLED" NUMBER (1) ,
-"HAPLOTYPE_SNP_COUNT" NUMBER(19,0),
-"SNP_PER_HAPLOTYPE_COUNT" NUMBER(19,0),
-PRIMARY KEY ("ID"),
-CONSTRAINT "PLATFORM_STUDY_ID_FK" FOREIGN KEY ("STUDY_ID")
-	  REFERENCES "GWAS"."STUDY" ("ID") ENABLE
-)
 
-CREATE SEQUENCE  "GWAS"."S_GWASARRAY_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE ;
 
-comment on table ARRAY_INFO is 'This is the table containing the information about the arrays used in the study'
-comment on column ARRAY_INFO.ID is 'The unique id of the table'
-comment on column ARRAY_INFO.SNP_COUNT is 'The number of snp genotyped with that array (including imputed is imputed is true)'
-comment on column ARRAY_INFO.IMPUTED is '1 means true, 0 mean false. True if the snp were imputed, false if the snp_count represents solely the snp present on the array'
-comment on column ARRAY_INFO.ARRAY_NAME is 'The manufacturer array name. It will not be used at first but maybe in the future'
-comment on column ARRAY_INFO.SNP_COUNT_QUALIFIER is 'In the paper the author doesn’t always stipulates the exact number of snp but will say "more then 100000”, in that case, 100000 will be stored in the SNP_COUNT and more will be stored as “<“ in the SNP_COUNT_QUALIFIER'
-comment on column ARRAY_INFO.PLATFORM is 'The name of the platforms used in the study  (ex : Affymetrix, Illumina…)'
-comment on column ARRAY_INFO.POOLED is '1 if the dna samples where pooled together 0 if they were not. Nothing if we don not know'
 
-alter table study
-add array_info_id NUMBER(19,0)
 
-ALTER TABLE STUDY
-ADD CONSTRAINT STUDY_ARRAY_INFO_ID_FK
-FOREIGN KEY (ARRAY_INFO_ID)
-REFERENCES ARRAY_INFO(ID)
 
-ALTER TABLE STUDY
-ADD "PLATFORM_TRANSFERRED" NUMBER (1)
 
-comment on column STUDY.PLATFORM_TRANSFERRED is '1 if data has been transferred to ARRAY_INFO table'
+
+
+
 
 
 

@@ -1,9 +1,9 @@
 use strict;
 use warnings;
 use DBI;
+use Getopt::Long;
 
 
-#
 #Returns a list of all the platform field where the script couldn't identify a platform name (ex : Affymetrix, Illumina).
 #Most of those will occur when the author of the paper didn not specify the platform but some of them will be typo that
 #need correcting with an sql querry like :
@@ -11,11 +11,31 @@ use DBI;
 #   set platform = 'Affymetrix [312,230]'
 #   where platform = 'Affyemtrix [312,230]'
 #
+# perl platformCheckUp.pl -i spottst -u gwas -p spottst_password
+#
+# -i is the spot instance you want to 'attack' (test => spottst, dev => spotdev', pro=> spotpro)
+# -u the user name (ex : gwas)
+# -p the user password.
 
-my $dbh = DBI->connect('DBI:Oracle:spotdev', 'gwas', 'gwa5d6')
+
+my $spot_db_instance;
+my $spot_db_password;
+my $spot_db_user;
+
+GetOptions(
+    'i=s'    => \$spot_db_instance,
+    'p=s'     => \$spot_db_password,
+    'u=s'   => \$spot_db_user,
+ ) or die "Incorrect usage!\n";
+
+
+
+#my $dbh = DBI->connect('DBI:Oracle:spotdev', 'gwas', '')
+#my $dbh = DBI->connect('DBI:Oracle:spottst', 'gwas', '')
+my $dbh = DBI->connect('DBI:Oracle:" . $spot_db_instance, $spot_db_user, $spot_db_password)
                 or die "Couldn't connect to database: " . DBI->errstr;
 
-my $sth = $dbh->prepare('select id, platform from study where  platform is not null')
+my $sth = $dbh->prepare('select id, platform_duplicate from study where  platform_duplicate is not null')
                 or die "Couldn't prepare statement: " . $dbh->errstr;
 
 $sth->execute()             # Execute the query
@@ -66,6 +86,7 @@ while (my @data = $sth->fetchrow_array()) {
         my $axiom_found = 0;
         my $affy6_found = 0;
         my $see_WTTC_found = 0;
+        my $platform_name_found = 0;
 
         if($name =~ /Affymetrix/){
             $affy_found = 1;
@@ -91,11 +112,14 @@ while (my @data = $sth->fetchrow_array()) {
         if($platform_names =~ /see WTCCC/){
             $see_WTTC_found = 1;
         }
+        if($name =~ /NR/){
+            $platform_name_found = 1;
+        }
 
 
-        if($affy6_found == 0 && $see_WTTC_found==0 && $axiom_found == 0 && $affy_found == 0 && $illu_found == 0 && $invader_found == 0 && $snplex_found == 0 && $perlegen_found == 0){
+        if($affy6_found == 0 && $see_WTTC_found==0 && $axiom_found == 0 && $affy_found == 0 && $illu_found == 0 && $invader_found == 0 && $snplex_found == 0 && $perlegen_found == 0 && $platform_name_found == 0){
 #            print "names_array.size = " . scalar @platform_names_array . "\n";
-            print "$study_id =$platform=\n\n";
+            print "--$platform\nupdate  study \nset platform_duplicate = '$platform' \nwhere id = '$study_id';\n\n";
         }
     }
 

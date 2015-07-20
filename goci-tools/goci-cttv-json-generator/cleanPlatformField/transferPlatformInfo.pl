@@ -1,7 +1,26 @@
 use strict;
 use warnings;
 use DBI;
+use Getopt::Long;
 
+# For each row of the STUDY table, this script will copy the value of the PLATFORM table to the PLATFORM_DUPLICATE field.
+#
+# perl transferPlatformInfo.pl -i spottst -u gwas -p spottst_password
+#
+# -i is the spot instance you want to 'attack' (test => spottst, dev => spotdev', pro=> spotpro)
+# -u the user name (ex : gwas)
+# -p the user password.
+
+
+my $spot_db_instance;
+my $spot_db_password;
+my $spot_db_user;
+
+GetOptions(
+    'i=s'    => \$spot_db_instance,
+    'p=s'     => \$spot_db_password,
+    'u=s'   => \$spot_db_user,
+ ) or die "Incorrect usage!\n";
 
 #
 #Returns a list of all the platform field where the script couldn't identify a platform name (ex : Affymetrix, Illumina).
@@ -12,10 +31,13 @@ use DBI;
 #   where platform = 'Affyemtrix [312,230]'
 #
 
-my $dbh = DBI->connect('DBI:Oracle:spotdev', 'gwas', 'gwa5d6')
+
+#my $dbh = DBI->connect('DBI:Oracle:spotdev', 'gwas', '')
+#my $dbh = DBI->connect('DBI:Oracle:spottst', 'gwas', '')
+my $dbh = DBI->connect('DBI:Oracle:" . $spot_db_instance, $spot_db_user, $spot_db_password)
                 or die "Couldn't connect to database: " . DBI->errstr;
 
-my $sth = $dbh->prepare('select id, platform from study where  platform is not null')
+my $sth = $dbh->prepare('select id, platform_duplicate from study where  platform_duplicate is not null')
                 or die "Couldn't prepare statement: " . $dbh->errstr;
 
 $sth->execute()             # Execute the query
@@ -190,11 +212,16 @@ while (my @data = $sth->fetchrow_array()) {
             $array_info_haplotype_snp_count = (split / /, $snp_haplotypes_array[1])[0];
             $array_info_snp_per_haplotype_count = (split / /, $snp_haplotypes_array[1])[1];
             $array_info_snp_per_haplotype_count =~ s/[\-]SNP//g;
+        }elsif($array_info_snp_count =~ /at least ~/){
+            $array_info_snp_count_qualifier = "at least ~";
+            $array_info_snp_count=~ s/at least ~//g;
+        }elsif($array_info_snp_count =~ /more than/){
+            $array_info_snp_count_qualifier = "more than";
+            $array_info_snp_count=~ s/more than//g;
         }elsif($array_info_snp_count =~ />=/){
             $array_info_snp_count_qualifier = ">=";
             $array_info_snp_count=~ s/>=//g;
         }elsif($array_info_snp_count =~ /</){
-
             $array_info_snp_count_qualifier = "<";
             $array_info_snp_count=~ s/<//g;
         }elsif($array_info_snp_count =~ />/){
@@ -202,7 +229,7 @@ while (my @data = $sth->fetchrow_array()) {
             $array_info_snp_count=~ s/>//g;
 
         }elsif($array_info_snp_count =~ /up to ~/i ){
-                $array_info_snp_count_qualifier = "<";
+                $array_info_snp_count_qualifier = "up to ~";
                 $array_info_snp_count=~ s/up to ~//ig;
 
 
@@ -212,7 +239,7 @@ while (my @data = $sth->fetchrow_array()) {
 
 
         }elsif($array_info_snp_count =~ /up to/i ){
-            $array_info_snp_count_qualifier = "<";
+            $array_info_snp_count_qualifier = "up to";
             $array_info_snp_count=~ s/up to//ig;
 
 
@@ -238,30 +265,32 @@ while (my @data = $sth->fetchrow_array()) {
     $array_info_snp_count=~ s/ //g;
     $array_info_snp_count =~ s/,//g;
 
-    my $sth_sequence = $dbh->prepare('select S_GWASARRAY_INFO.nextval from DUAL') or die "Couldn't prepare statement: " . $dbh->errstr;
-    $sth_sequence->execute()             # Execute the query
+    if($array_is_cnv == 0){
+        my $sth_sequence = $dbh->prepare('select S_GWASARRAY_INFO.nextval from DUAL') or die "Couldn't prepare statement: " . $dbh->errstr;
+        $sth_sequence->execute()             # Execute the query
             or die "Couldn't execute statement: " . $sth->errstr;
-    while (my @data = $sth_sequence->fetchrow_array()) {
-        $array_info_id = $data[0];
-    }
+        while (my @data = $sth_sequence->fetchrow_array()) {
+            $array_info_id = $data[0];
+        }
 
 
 
 
-    print "$study_id, $platform \n";
-    print "\tarray_info_id = $array_info_id\n";
-    print "\tarray_info_snp_count = $array_info_snp_count\n";
-    print "\tarray_info_imputed = $array_info_imputed\n";
-    print "\tarray_info_array_name = $array_info_array_name\n";
-    print "\tarray_info_snp_count_qualifier = $array_info_snp_count_qualifier\n";
-    print "\tarray_info_platform = $array_info_platform\n";
-    print "\tarray_info_study_id = $array_info_study_id\n";
-    print "\tarray_info_pooled = $array_info_pooled\n\n";
+        print "$study_id, $platform \n";
+        print "\tarray_info_id = $array_info_id\n";
+        print "\tarray_info_snp_count = $array_info_snp_count\n";
+        print "\tarray_info_imputed = $array_info_imputed\n";
+        print "\tarray_info_array_name = $array_info_array_name\n";
+        print "\tarray_info_snp_count_qualifier = $array_info_snp_count_qualifier\n";
+        print "\tarray_info_platform = $array_info_platform\n";
+        print "\tarray_info_study_id = $array_info_study_id\n";
+        print "\tarray_info_pooled = $array_info_pooled\n\n";
 
 
-    my $return_code = insert_array_info($array_info_id, $array_info_snp_count, $array_info_imputed, $array_info_array_name, $array_info_snp_count_qualifier, $array_info_platform, $array_info_study_id, $array_info_pooled, $array_is_cnv, $array_info_haplotype_snp_count, $array_info_snp_per_haplotype_count);
-    if($return_code == 0){
-        die "Couldn't save new array info to database!";
+        my $return_code = insert_array_info($array_info_id, $array_info_snp_count, $array_info_imputed, $array_info_array_name, $array_info_snp_count_qualifier, $array_info_platform, $array_info_study_id, $array_info_pooled, $array_info_haplotype_snp_count, $array_info_snp_per_haplotype_count);
+        if($return_code == 0){
+           die "Couldn't save new array info to database!";
+        }
     }
 
 #    print "$study_id, $platform \n";
@@ -292,21 +321,21 @@ $dbh->disconnect;
 sub insert_array_info {
     # Arguments: database handle; first and last names of new employee;
     # department ID number for new employee's work assignment
-    my ($id, $snp_count, $imputed, $array_name, $snp_count_qualifier, $platform, $study_id, $pooled, $is_cnv, $haplotype_snp_count, $snp_per_haplotype_count) = @_;
+    my ($id, $snp_count, $imputed, $array_name, $snp_count_qualifier, $platform, $study_id, $pooled, $haplotype_snp_count, $snp_per_haplotype_count) = @_;
 
     if($snp_count =~ /NR/ || $snp_count =~ /UNSURE/ || $snp_count =~ /unsure/){
         $snp_count = undef;
     }
 
-    my $insert_handle = $dbh->prepare_cached('insert into array_info (ID, SNP_COUNT, IMPUTED, ARRAY_NAME, SNP_COUNT_QUALIFIER, PLATFORM, STUDY_ID, POOLED, IS_CNV, HAPLOTYPE_SNP_COUNT,SNP_PER_HAPLOTYPE_COUNT)  values(?,?, ?,?, ?, ? , ?, ?, ?,?,?)');
-    my $update_handle = $dbh->prepare_cached('UPDATE study SET PLATFORM_TRANSFERRED = 1 WHERE id = ?');
+    my $insert_handle = $dbh->prepare_cached('insert into array_info (ID, SNP_COUNT, IMPUTED, ARRAY_NAME, SNP_COUNT_QUALIFIER, PLATFORM, POOLED, HAPLOTYPE_SNP_COUNT,SNP_PER_HAPLOTYPE_COUNT)  values(?,?, ?, ?,?, ?, ?,?,?)');
+    my $update_handle = $dbh->prepare_cached('UPDATE study SET array_info_id = ? WHERE id = ?');
 
     die "Couldn't prepare queries; aborting"
         unless defined $insert_handle && defined $update_handle;
 
         my $success = 1;
-                  $success &&= $insert_handle->execute($id, $snp_count, $imputed, $array_name, $snp_count_qualifier, $platform, $study_id, $pooled, $is_cnv,$haplotype_snp_count, $snp_per_haplotype_count);
-                  $success &&= $update_handle->execute($study_id);
+        $success &&= $insert_handle->execute($id, $snp_count, $imputed, $array_name, $snp_count_qualifier, $platform, $pooled, $haplotype_snp_count, $snp_per_haplotype_count);
+        $success &&= $update_handle->execute($id, $study_id);
 
 
         my $result = ($success ? $dbh->commit : $dbh->rollback);
