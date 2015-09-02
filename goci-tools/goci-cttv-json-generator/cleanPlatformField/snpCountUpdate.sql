@@ -2174,4 +2174,15 @@ set platform_duplicate = 'Affymetrix &' || ' Illumina [~2500000] (imputed)'
 where id = '6697';
 
 
+update study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2500000] (imputed)'
+where id = '8142'
+
+update study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [2500000] (Imputed)	'
+where id = '10058236'
+
+update study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [2500000] (Imputed)'
+where id = '10082891'
 

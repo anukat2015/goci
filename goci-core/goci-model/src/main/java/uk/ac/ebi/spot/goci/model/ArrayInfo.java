@@ -22,7 +22,6 @@ public class ArrayInfo {
     private String snpCountQualifier;
     private String platform;
     private Boolean pooled;
-    private Boolean isCnv;
     private Long haplotypeSnpCount;
     private int snpPerHaplotypeCount;
 
@@ -36,7 +35,6 @@ public class ArrayInfo {
         this.snpCountQualifier = snpCountQualifier;
         this.platform = platform;
         this.pooled = pooled;
-        this.isCnv = isCnv;
         this.haplotypeSnpCount = haplotypeSnpCount;
         this.snpPerHaplotypeCount = snpPerHaplotypeCount;
     }
@@ -97,14 +95,6 @@ public class ArrayInfo {
         this.pooled = pooled;
     }
 
-    public Boolean getIsCnv() {
-        return isCnv;
-    }
-
-    public void setIsCnv(Boolean isCnv) {
-        this.isCnv = isCnv;
-    }
-
     public Long getHaplotypeSnpCount() {
         return haplotypeSnpCount;
     }
@@ -131,7 +121,6 @@ public class ArrayInfo {
                 ", snpCountQualifier='" + snpCountQualifier + '\'' +
                 ", platform='" + platform + '\'' +
                 ", pooled='" + pooled + '\'' +
-                ", isCnv='" + isCnv + '\'' +
                 ", haplotypeSnpCount='" + haplotypeSnpCount + '\'' +
                 ", snpPerHaplotypeCount='" + snpPerHaplotypeCount + '\'' +
                 '}';
