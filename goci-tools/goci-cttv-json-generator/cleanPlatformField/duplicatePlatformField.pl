@@ -1,8 +1,7 @@
 use strict;
 use warnings;
 use DBI;
-
-
+use Getopt::Long;
 #
 # For each row, copy the STUDY.PLATFORM field to the STUDY.PLATFORM_DUPLICATE field.
 #
@@ -24,14 +23,11 @@ GetOptions(
  ) or die "Incorrect usage!\n";
 
 #my $dbh = DBI->connect('DBI:Oracle:spotdev', 'gwas', 'gwa5d6')
-my $dbh = DBI->connect('DBI:Oracle:" . $spot_db_instance, $spot_db_user, $spot_db_password)
-                or die "Couldn't connect to database: " . DBI->errstr;
+my $dbh = DBI->connect('DBI:Oracle:' . $spot_db_instance, $spot_db_user, $spot_db_password) or die "Couldn't connect to database: " . DBI->errstr;
 
-my $sth = $dbh->prepare('select id, platform from study where  platform is not null')
-                or die "Couldn't prepare statement: " . $dbh->errstr;
+my $sth = $dbh->prepare('select id, platform from study where  platform is not null') or die "Couldn't prepare statement: " . $dbh->errstr;
 
-$sth->execute()             # Execute the query
-            or die "Couldn't execute statement: " . $sth->errstr;
+$sth->execute() or die "Couldn't execute statement: " . $sth->errstr;
 
 while (my @data = $sth->fetchrow_array()) {
 
