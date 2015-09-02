@@ -547,21 +547,21 @@ where id = '7220';
 --Illumina [6.1 m] (imputed)
 update study
 set platform_duplicate = 'Illumina [6100000] (imputed)'
-where id = 7939
+where id = '7939';
 
 -- Affymetrix [2.1 M] (imputed)
 update study
 set platform_duplicate = 'Affymetrix [2100000] (imputed)'
-where id = 10058168
+where id = '10058168';
 
 --Affymetrix [2.1 M] (imputed)
 update study
 set platform_duplicate = 'Affymetrix [2100000] (imputed)'
-where id = 7949
+where id = '7949';
 
 update study
 set platform_duplicate = 'Affymetrix [more than 371951] (imputed)'
-where id = 7764
+where id = '7764';
 
 --Illumina [2.5 million] (Imputed)
 update study
@@ -593,6 +593,14 @@ where id = '6464';
 update study
 set platform_duplicate = 'Illumina [~2500000] (imputed)'
 where id = '5912';
+
+
+
+
+
+
+
+
 
 --Affymetrix [~1 million]
 update study

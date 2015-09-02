@@ -32,7 +32,7 @@ GetOptions(
 
 #my $dbh = DBI->connect('DBI:Oracle:spotdev', 'gwas', '')
 #my $dbh = DBI->connect('DBI:Oracle:spottst', 'gwas', '')
-my $dbh = DBI->connect('DBI:Oracle:" . $spot_db_instance, $spot_db_user, $spot_db_password)
+my $dbh = DBI->connect('DBI:Oracle:' . $spot_db_instance, $spot_db_user, $spot_db_password)
                 or die "Couldn't connect to database: " . DBI->errstr;
 
 my $sth = $dbh->prepare('select id, platform_duplicate from study where  platform_duplicate is not null')
