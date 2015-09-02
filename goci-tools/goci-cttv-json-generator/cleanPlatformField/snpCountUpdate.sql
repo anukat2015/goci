@@ -2172,3 +2172,6 @@ where id = '5331';
 update study
 set platform_duplicate = 'Affymetrix &' || ' Illumina [~2500000] (imputed)'
 where id = '6697';
+
+
+

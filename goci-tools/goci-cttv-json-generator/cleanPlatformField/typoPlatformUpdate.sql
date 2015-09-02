@@ -316,3 +316,63 @@ where id = '10070346';
 update  study
 set platform_duplicate = 'Affymetrix &' || ' Illumina [~2.1 million] (Imputed)'
 where id = '10070350';
+
+--Afftmetrix & Illumina [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2500000] (imputed)'
+where id = '6582';
+
+--Affyemtrix & Illumina [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2500000] (imputed)'
+where id = '6551';
+
+--Affymetrix Illumina & Perlgen [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix Illumina &' || ' Perlegen [~2500000] (imputed)'
+where id = '6572';
+
+--Affymetrix Illumina & Perlgen [~2600000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix Illumina &' || ' Perlegen [~2600000] (imputed)'
+where id = '6429';
+
+--Affymetrix & Ilumina [~2200000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2200000] (imputed)'
+where id = '6946';
+
+--Affyemtrix & Illumina [1230000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [1230000] (imputed)'
+where id = '7056';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7417';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7416';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7327';
+
+--Affymterix & Illumina [~5200000]
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~5200000]'
+where id = '8176';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7418';
+
+--Illumina and Affymetrics [>2000000] (Imputed)
+update  study
+set platform_duplicate = 'Illumina &' || ' Affymetrix [>2000000] (Imputed)'
+where id = '7121';
