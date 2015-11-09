@@ -29,11 +29,13 @@ sparqlEndPoint = sys.argv[3]
 
 
 # first, load the mappings file (rsid -> gene) as a dictionary
-# rs227724        ENSG00000183691 upstream_gene_variant
-# rs7503807       ENSG00000141564 intron_variant
-# rs2240466       ENSG00000009954 intron_variant
-# rs2488389       ENSG00000213047 intron_variant
-# rs10508372      ENSG00000234752 upstream_gene_variant
+#rs_id   consequence_term        ensembl_gene_id_cttv    gene_label
+#rs2270368       intron_variant  ENSG00000167208 SNX20
+#rs12922317      intron_variant  ENSG00000048471 SNX29
+#rs1795648       intron_variant  ENSG00000187672 ERC2
+#rs320320        intron_variant  ENSG00000275199 AKT3
+#rs3105169       intron_variant  ENSG00000132549 VPS13B
+#rs11673344      intron_variant  ENSG00000245680 ZNF585B
 snpGeneMappings = {}
 with open(snp2geneMappingFilePath) as mappings:
 	for a in xrange(1):
