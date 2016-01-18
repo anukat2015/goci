@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -67,6 +69,33 @@ public class EnsemblRestService {
         this.rest_endpoint = rest_endpoint;
         this.rest_data = rest_data;
         this.rest_parameters = rest_parameters;
+    }
+
+    @PostConstruct
+    public void init() {
+        // Set proxy
+        String host = System.getProperty("http.proxyHost");
+        String port = System.getProperty("http.proxyPort");
+        Integer portNum = 0;
+
+        // Get port number
+        if (port != null) {
+            portNum = Integer.valueOf(port);
+        }
+
+        if (host != null && port != null) {
+            Unirest.setProxy(new HttpHost(host, portNum));
+        }
+    }
+
+    @PreDestroy
+    public void destroy() {
+        try {
+            Unirest.shutdown();
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Failed to shutdown Unirest HTTP connection service", e);
+        }
     }
 
 
@@ -129,21 +158,6 @@ public class EnsemblRestService {
 
 
     private void fetchJson(String url) throws UnirestException, InterruptedException {
-
-        // Set proxy
-        String host = System.getProperty("http.proxyHost");
-        String port = System.getProperty("http.proxyPort");
-        Integer portNum = 0;
-
-        // Get port number
-        if (port != null) {
-            portNum = Integer.valueOf(port);
-        }
-
-        if (host != null && port != null) {
-            Unirest.setProxy(new HttpHost(host, portNum));
-        }
-
         HttpResponse<JsonNode> response = Unirest.get(url)
                 .header("Content-Type", "application/json")
                 .asJson();
