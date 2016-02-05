@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Goci by EBISPOT</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Goci</h1>
+        <p>GWAS Catalog Ontology and Curation Infrastructure</p>
+
+        <p class="view"><a href="https://github.com/EBISPOT/goci">View the Project on GitHub <small>EBISPOT/goci</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/EBISPOT/goci/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/EBISPOT/goci/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/EBISPOT/goci">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="goci" class="anchor" href="#goci" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GOCI</h1>
+
+<p>GWAS Catalog Ontology and Curation Infrastructure from SPOT at EBI.</p>
+
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>This project is a result of a collaboration between the NHGRI and the EBI to produce ontology-based curation and search
+functionality for the GWAS catalog.  This includes ontology-based query expansion in the public interface and curator
+tools for annotating studies as they are entered into the GWAS catalog.</p>
+
+<p>Below is some developer information for working with the code held in this git repository.</p>
+
+<h2>
+<a id="git-vs-svn" class="anchor" href="#git-vs-svn" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Git vs. SVN</h2>
+
+<p>We've opted to use git as the SCM for this project, and host the source code on GitHub.  The main motivation for this
+is to enable us to use GitHub rather than sourceforge as our hosting site - it is much faster and provides better
+support.</p>
+
+<p>The nice thing about GitHub is that is provides access to the project sourcecode via git or SVN: so if you are not used
+to working with git you can still contribute using SVN.</p>
+
+<p>To obtain copies of the project source, use the following commands:</p>
+
+<p>Git:</p>
+
+<p>git clone <a href="https://github.com/ebispot/goci">https://github.com/ebispot/goci</a></p>
+
+<p>SVN:</p>
+
+<p>svn checkout <a href="https://github.com/ebispot/goci">https://github.com/ebispot/goci</a></p>
+
+<p>You can push changes back to the GitHub repository using the normal mechanism for either git or SVN.</p>
+
+<h2>
+<a id="maven-structure" class="anchor" href="#maven-structure" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Maven Structure</h2>
+
+<p>The GWAS Ontology and Curation Infrastructure (GOCI) is organised into several main strands: tools for working with the
+ontology, tools for enhancing curation activities, and tools to generate a diagram of GWAS catalog data.</p>
+
+<h3>
+<a id="goci-core" class="anchor" href="#goci-core" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GOCI Core</h3>
+
+<p>This module hosts the core classes underlying the GOCI tooling suite. It includes sub-modules for the key model objects that GOCI is based on, repository and service modules for accessing the data model and modules for diagram generation and interacting with ontologies.</p>
+
+<h3>
+<a id="goci-interfaces" class="anchor" href="#goci-interfaces" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GOCI Interfaces</h3>
+
+<p>This module includes all the different ways to interface with the GWAS Catalog. It includes modules for the curation system, the public GWAS Catalog portal, the diagram generation service and a place holder module with some config for the GWAS Solr index.</p>
+
+<h3>
+<a id="goci-tools" class="anchor" href="#goci-tools" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GOCI Tools</h3>
+
+<p>This module contains a range of stand-alone tools, including a datapublisher to convert the relational GWAS database into RDF/OWL, a mapper to annotate Catalog data with genomic context information from Ensembl via their REST API, a Solr indexer to load the database into a Solr index, as well as a range of util classes and one-off tools used for analysis.</p>
+
+<h3>
+<a id="goci-parent--goci-dependencies" class="anchor" href="#goci-parent--goci-dependencies" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GOCI Parent &amp; GOCI Dependencies</h3>
+
+<p>These are convenience modules used for dependency management.</p>
+
+<h2>
+<a id="building-this-project" class="anchor" href="#building-this-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building this Project</h2>
+
+<p>This project is built with Maven (<a href="http://maven.apache.org">http://maven.apache.org</a>) so make sure you have an up-to-date installation of Maven
+before proceeding.</p>
+
+<p>Check out the source code as described above, change to the root GOCI directory and run</p>
+
+<p>mvn clean install</p>
+
+<p>to build all binaries of this project.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/EBISPOT">EBISPOT</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
