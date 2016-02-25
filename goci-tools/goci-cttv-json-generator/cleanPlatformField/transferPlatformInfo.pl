@@ -34,7 +34,7 @@ GetOptions(
 
 #my $dbh = DBI->connect('DBI:Oracle:spotdev', 'gwas', '')
 #my $dbh = DBI->connect('DBI:Oracle:spottst', 'gwas', '')
-my $dbh = DBI->connect('DBI:Oracle:" . $spot_db_instance, $spot_db_user, $spot_db_password)
+my $dbh = DBI->connect('DBI:Oracle:' . $spot_db_instance, $spot_db_user, $spot_db_password)
                 or die "Couldn't connect to database: " . DBI->errstr;
 
 my $sth = $dbh->prepare('select id, platform_duplicate from study where  platform_duplicate is not null')
@@ -102,12 +102,23 @@ while (my @data = $sth->fetchrow_array()) {
 #        print "$name \n";
         my $affy_found = 0;
         my $illu_found = 0;
+        my $immunochip_found = 0;
         my $invader_found = 0;
         my $snplex_found = 0;
         my $perlegen_found = 0;
         my $axiom_found = 0;
         my $affy6_found = 0;
         my $see_WTTC_found = 0;
+
+        if($name =~ /Immunochip/){
+            if($name_count == 0){
+                $array_info_platform = "Immunochip";
+                $name_count++;
+            }else{
+                $array_info_platform = $array_info_platform . ", Immunochip";
+            }
+            $immunochip_found = 1;
+        }
 
         if($name =~ /Affymetrix/){
             if($name_count == 0){

@@ -253,7 +253,7 @@ where id = '5245';
 --Affymetrix (455,089)
 update  study
 set platform_duplicate = 'Affymetrix [455,089]'
-where id = '7014'
+where id = '7014';
 
 --Illumina & Affymetrix (~2.7 million) imputed
 update  study
@@ -300,7 +300,7 @@ where id = '8090';
 --Illumina and Affymetrics [>2 million] (Imputed)
 update  study
 set platform_duplicate = 'Illumina and Affymetrix [>2 million] (Imputed)'
-where id = '7121'
+where id = '7121';
 
 --Affymetrx & Illumina [~2.1 milliion] (Imputed)
 update  study
@@ -376,3 +376,360 @@ where id = '7418';
 update  study
 set platform_duplicate = 'Illumina &' || ' Affymetrix [>2000000] (Imputed)'
 where id = '7121';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--Afftmetrix & Illumina [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2500000] (imputed)'
+where id = '6582';
+
+--Affyemtrix & Illumina [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2500000] (imputed)'
+where id = '6551';
+
+--Affymetrix Illumina & Perlgen [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix Illumina &' || ' Perlegen [~2500000] (imputed)'
+where id = '6572';
+
+--Affymetrix Illumina & Perlgen [~2600000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix Illumina &' || ' Perlegen [~2600000] (imputed)'
+where id = '6429';
+
+--Affymetrix & Ilumina [~2200000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2200000] (imputed)'
+where id = '6946';
+
+--Affyemtrix & Illumina [1230000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [1230000] (imputed)'
+where id = '7056';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7417';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7416';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7327';
+
+--Affymterix & Illumina [~5200000]
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~5200000]'
+where id = '8176';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7418';
+
+--Illumina and Affymetrics [>2000000] (Imputed)
+update  study
+set platform_duplicate = 'Illumina and Affymetrix [>2000000] (Imputed)'
+where id = '7121';
+
+--Ilumina [582,718]
+update  study
+set platform_duplicate = 'Illumina [582,718]'
+where id = '12295153';
+
+--Immochip
+update  study
+set platform_duplicate = 'Immochip'
+where id = '12786144';
+
+--Ilumina [7,238,679] (imputed)
+update  study
+set platform_duplicate = 'Illumina [7,238,679] (imputed)'
+where id = '10073664';
+
+--Ilumina [11,892,802] (imputed)
+update  study
+set platform_duplicate = 'Illumina [11,892,802] (imputed)'
+where id = '10073668';
+
+--Ilumina [486,478]
+update  study
+set platform_duplicate = 'Illumina [486,478]'
+where id = '10071054';
+
+--Ilumina [2,202,473] (imputed)
+update  study
+set platform_duplicate = 'Illumina [2,202,473] (imputed)'
+where id = '10085869';
+
+--Affymetrix (imputed)
+update  study
+set platform_duplicate = 'Affymetrix (imputed)'
+where id = '10091199';
+
+--Illumina & Affymetrix & Perlgene [~2,100,000] (imputed)
+update  study
+set platform_duplicate = 'Illumina &' || ' Affymetrix &' || ' Perlegene [~2,100,000] (imputed)'
+where id = '10091205';
+
+--Ilumina [582,718]
+update  study
+set platform_duplicate = 'Illumina [582,718]'
+where id = '10093269';
+
+--Ilumina [244,624]
+update  study
+set platform_duplicate = 'Illumina [244,624]'
+where id = '10075892';
+
+--Affmetrix [up to ~9,100,000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix [up to ~9,100,000] (imputed)'
+where id = '10075906';
+
+--Ilumina [NR] (imputed)
+update  study
+set platform_duplicate = 'Illumina [NR] (imputed)'
+where id = '10096013';
+
+--Illlumina [5,970,354]
+update  study
+set platform_duplicate = 'Illumina [5,970,354]'
+where id = '10096015';
+
+--Illumina, Affymetrix, Perlgen [up to37,400,000] (imputed)
+update  study
+set platform_duplicate = 'Illumina, Affymetrix, Perlegen [up to37,400,000] (imputed)'
+where id = '10129281';
+
+--Illumina, Affymetrix, Perlgen [up to37,400,000] (imputed)
+update  study
+set platform_duplicate = 'Illumina, Affymetrix, Perlegen [up to37,400,000] (imputed)'
+where id = '10129284';
+
+--Illumina, Affymetrix, Perlgen [up to37,400,000] (imputed)
+update  study
+set platform_duplicate = 'Illumina, Affymetrix, Perlegen [up to37,400,000] (imputed)'
+where id = '10129287';
+
+--Affymetrix & Illumina & Perlgen [1,978,803] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina &' || ' Perlegen [1,978,803] (imputed)'
+where id = '10077658';
+
+--Affymterix, Illumina and Perlegen [up to 5,493,100] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix, Illumina and Perlegen [up to 5,493,100] (imputed)'
+where id = '10328821';
+
+--Ilumina [11,892,802] (imputed)
+update  study
+set platform_duplicate = 'Illumina [11,892,802] (imputed)'
+where id = '10756142';
+
+--Ilumina [7,238,679] (imputed)
+update  study
+set platform_duplicate = 'Illumina [7,238,679] (imputed)'
+where id = '10790675';
+
+--Illumina, Affymetrix, Perlgen [up to 2,542,447] (imputed)
+update  study
+set platform_duplicate = 'Illumina, Affymetrix, Perlegen [up to 2,542,447] (imputed)'
+where id = '10058120';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--Afftmetrix & Illumina [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2500000] (imputed)'
+where id = '6582';
+
+--Affyemtrix & Illumina [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2500000] (imputed)'
+where id = '6551';
+
+--Affymetrix Illumina & Perlgen [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix Illumina &' || ' Perlegen [~2500000] (imputed)'
+where id = '6572';
+
+--Affymetrix Illumina & Perlgen [~2600000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix Illumina &' || ' Perlegen [~2600000] (imputed)'
+where id = '6429';
+
+--Affymetrix & Ilumina [~2200000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2200000] (imputed)'
+where id = '6946';
+
+--Affyemtrix & Illumina [1230000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [1230000] (imputed)'
+where id = '7056';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7417';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7416';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7327';
+
+--Affymterix & Illumina [~5200000]
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~5200000]'
+where id = '8176';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7418';
+
+--Illumina and Affymetrics [>2000000] (Imputed)
+update  study
+set platform_duplicate = 'Illumina and Affymetrix [>2000000] (Imputed)'
+where id = '7121';
+
+--Affymetrix (imputed)
+update  study
+set platform_duplicate = 'Affymetrix (imputed)'
+where id = '10091199';
+
+--Immunochip? [93,112]
+update  study
+set platform_duplicate = 'Immunochip? [93,112]'
+where id = '10091259';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--Afftmetrix & Illumina [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2500000] (imputed)'
+where id = '6582';
+
+--Affyemtrix & Illumina [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2500000] (imputed)'
+where id = '6551';
+
+--Affymetrix Illumina & Perlgen [~2500000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix Illumina &' || ' Perlegen [~2500000] (imputed)'
+where id = '6572';
+
+--Affymetrix Illumina & Perlgen [~2600000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix Illumina &' || ' Perlegen [~2600000] (imputed)'
+where id = '6429';
+
+--Affymetrix & Ilumina [~2200000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2200000] (imputed)'
+where id = '6946';
+
+--Affyemtrix & Illumina [1230000] (imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [1230000] (imputed)'
+where id = '7056';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7417';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7416';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7327';
+
+--Affymterix & Illumina [~5200000]
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~5200000]'
+where id = '8176';
+
+--Affmetrix & Illumina [~2300000] (Imputed)
+update  study
+set platform_duplicate = 'Affymetrix &' || ' Illumina [~2300000] (Imputed)'
+where id = '7418';
+
+--Illumina and Affymetrics [>2000000] (Imputed)
+update  study
+set platform_duplicate = 'Illumina and Affymetrix [>2000000] (Imputed)'
+where id = '7121';
+
+--Affymetrix (imputed)
+update  study
+set platform_duplicate = 'Affymetrix (imputed)'
+where id = '10091199';
+
+--Immunochip? [93,112]
+update  study
+set platform_duplicate = 'Immunochip? [93,112]'
+where id = '10091259';
