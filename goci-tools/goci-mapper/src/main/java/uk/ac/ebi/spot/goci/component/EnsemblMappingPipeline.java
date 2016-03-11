@@ -76,7 +76,7 @@ public class EnsemblMappingPipeline {
     }
 
     // Run the pipeline for a given SNP
-    public synchronized EnsemblMappingResult run_pipeline(String rsId, Collection<String> reportedGenes)
+    public synchronized EnsemblMappingResult runMapping(String rsId)
             throws EnsemblRestIOException {
 
         // Create our result object
@@ -133,14 +133,18 @@ public class EnsemblMappingPipeline {
             getLog().error("Variation call for SNP " + rsId + " returned no result");
         }
 
-        // Reported genes checks
-        if (reportedGenes.size() > 0) {
-            checkReportedGenes(reportedGenes, getEnsemblMappingResult().getLocations());
-        }
 
         return getEnsemblMappingResult();
     }
 
+
+    public void runAuthorReportedGenesCheck(Collection<String> genes, Collection<Location> snpLocations)
+            throws EnsemblRestIOException {
+        // Reported genes checks
+        if (genes.size() > 0) {
+            checkReportedGenes(genes, snpLocations);
+        }
+    }
 
     /**
      * Check that the reported gene symbols exist and that they are located in the same chromosome as the variant
@@ -465,7 +469,8 @@ public class EnsemblMappingPipeline {
                     }
                 }
                 else {
-                    if ((gene_name != null && getEnsemblMappingResult().getEnsemblOverlappingGene().contains(gene_name)) ||
+                    if ((gene_name != null &&
+                            getEnsemblMappingResult().getEnsemblOverlappingGene().contains(gene_name)) ||
                             gene_name ==
                                     null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                         continue;
@@ -504,7 +509,8 @@ public class EnsemblMappingPipeline {
                     }
                 }
                 else {
-                    if ((gene_name != null && getEnsemblMappingResult().getEnsemblOverlappingGene().contains(gene_name)) ||
+                    if ((gene_name != null &&
+                            getEnsemblMappingResult().getEnsemblOverlappingGene().contains(gene_name)) ||
                             gene_name ==
                                     null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                         continue;
@@ -616,14 +622,16 @@ public class EnsemblMappingPipeline {
                     String gene_name = json_gene.getString("external_name");
 
                     if (source.equals(getNcbiSource())) {
-                        if ((gene_name != null && getEnsemblMappingResult().getNcbiOverlappingGene().contains(gene_name)) ||
+                        if ((gene_name != null &&
+                                getEnsemblMappingResult().getNcbiOverlappingGene().contains(gene_name)) ||
                                 gene_name ==
                                         null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                             continue;
                         }
                     }
                     else {
-                        if ((gene_name != null && getEnsemblMappingResult().getEnsemblOverlappingGene().contains(gene_name)) ||
+                        if ((gene_name != null &&
+                                getEnsemblMappingResult().getEnsemblOverlappingGene().contains(gene_name)) ||
                                 gene_name ==
                                         null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
                             continue;
