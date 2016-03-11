@@ -63,6 +63,6 @@ public class MapCatalogService {
         }
 
         // Update all associations to reflect new mapping
-        associationUpdateService.postFullMappingOperations(snpToMappingErrors);
+        associationUpdateService.postFullMappingOperations(snpToMappingErrors,performer);
     }
 }

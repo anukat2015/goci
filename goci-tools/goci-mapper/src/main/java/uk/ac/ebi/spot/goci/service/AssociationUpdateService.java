@@ -13,6 +13,7 @@ import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -30,6 +31,7 @@ public class AssociationUpdateService {
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
     private CheckAuthorReportedGenesService checkAuthorReportedGenesService;
     private AssociationReportService associationReportService;
+    private MappingRecordService mappingRecordService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -43,16 +45,18 @@ public class AssociationUpdateService {
                                     MappingErrorComparisonService mappingErrorComparisonService,
                                     SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
                                     CheckAuthorReportedGenesService checkAuthorReportedGenesService,
-                                    AssociationReportService associationReportService) {
+                                    AssociationReportService associationReportService,
+                                    MappingRecordService mappingRecordService) {
         this.associationReportRepository = associationReportRepository;
         this.associationService = associationService;
         this.mappingErrorComparisonService = mappingErrorComparisonService;
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.checkAuthorReportedGenesService = checkAuthorReportedGenesService;
         this.associationReportService = associationReportService;
+        this.mappingRecordService = mappingRecordService;
     }
 
-    public void postFullMappingOperations(Map<Long, Collection<String>> snpToMappingErrors)
+    public void postFullMappingOperations(Map<Long, Collection<String>> snpToMappingErrors, String performer)
             throws EnsemblMappingException {
 
         // Get all old association reports so we can compare with new ones
@@ -86,6 +90,8 @@ public class AssociationUpdateService {
             else {
                 associationReportService.updateAssociationReportDetails(association);
             }
+
+            mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
         }
         mappingErrorComparisonService.compareOldVersusNewErrors(oldAssociationReports);
     }
