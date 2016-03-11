@@ -1,3 +1,4 @@
+/*
 package uk.ac.ebi.spot.goci.service;
 
 import org.slf4j.Logger;
@@ -24,13 +25,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+*/
 /**
  * Created by emma on 13/08/2015.
  *
  * @author emma
  *         <p>
  *         Service that runs mapping pipeline over all or a selection of associations.
- */
+ *//*
+
 @Service
 public class MappingService {
 
@@ -67,12 +70,14 @@ public class MappingService {
         this.ensemblMappingPipeline = ensemblMappingPipeline;
     }
 
-    /**
+    */
+/**
      * Perform validation and mapping of supplied associations
      *
      * @param associations Collection of associations to map
      * @param performer    name of curator/job carrying out the mapping
-     */
+     *//*
+
     @Transactional(rollbackFor = EnsemblMappingException.class)
     public void validateAndMapAssociations(Collection<Association> associations, String performer)
             throws EnsemblMappingException {
@@ -92,12 +97,14 @@ public class MappingService {
     }
 
 
-    /**
+    */
+/**
      * Perform validation and mapping of all database associations
      *
      * @param associations Collection of associations to map
      * @param performer    name of curator/job carrying out the mapping
-     */
+     *//*
+
     public void validateAndMapAllAssociations(Collection<Association> associations, String performer)
             throws EnsemblMappingException {
 
@@ -237,3 +244,4 @@ public class MappingService {
         }
     }
 }
+*/
