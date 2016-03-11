@@ -137,13 +137,20 @@ public class EnsemblMappingPipeline {
         return getEnsemblMappingResult();
     }
 
-
-    public void runAuthorReportedGenesCheck(Collection<String> genes, Collection<Location> snpLocations)
+    /**
+     * Reported genes checks
+     *
+     * @param genes
+     * @param snpLocations
+     */
+    public ArrayList<String> runAuthorReportedGenesCheck(Collection<String> genes, Collection<Location> snpLocations)
             throws EnsemblRestIOException {
-        // Reported genes checks
+
+        ArrayList<String> errors = new ArrayList<>();
         if (genes.size() > 0) {
-            checkReportedGenes(genes, snpLocations);
+            errors = checkReportedGenes(genes, snpLocations);
         }
+        return errors;
     }
 
     /**
@@ -152,9 +159,10 @@ public class EnsemblMappingPipeline {
      * @param reportedGenes
      * @param locations
      */
-
-    private void checkReportedGenes(Collection<String> reportedGenes, Collection<Location> locations)
+    private ArrayList<String> checkReportedGenes(Collection<String> reportedGenes, Collection<Location> locations)
             throws EnsemblRestIOException {
+
+        ArrayList<String> errors = new ArrayList<>();
 
         for (String reportedGene : reportedGenes) {
 
@@ -168,7 +176,7 @@ public class EnsemblMappingPipeline {
 
                 // Check for errors
                 if (reportedGeneApiResult.getError() != null && !reportedGeneApiResult.getError().isEmpty()) {
-                    getEnsemblMappingResult().addPipelineErrors(reportedGeneApiResult.getError());
+                    errors.add(reportedGeneApiResult.getError());
                 }
 
                 if (reportedGeneApiResult.getRestResult() != null) {
@@ -187,28 +195,26 @@ public class EnsemblMappingPipeline {
                                 }
                             }
                             if (same_chromosome == 0) {
-                                getEnsemblMappingResult().addPipelineErrors(
-                                        "Reported gene " + reportedGene + " is on a different chromosome (chr" +
-                                                gene_chromosome + ")");
+                                errors.add("Reported gene " + reportedGene + " is on a different chromosome (chr" +
+                                                   gene_chromosome + ")");
                             }
                         }
                         else {
-                            getEnsemblMappingResult().addPipelineErrors("Can't compare the " + reportedGene +
-                                                                                " location in Ensembl: no mapping available for the variant");
+                            errors.add("Can't compare the " + reportedGene +
+                                               " location in Ensembl: no mapping available for the variant");
                         }
                     }
                     // No gene location found
                     else {
-                        getEnsemblMappingResult().addPipelineErrors(
-                                "Can't find a location in Ensembl for the reported gene " + reportedGene);
+                        errors.add("Can't find a location in Ensembl for the reported gene " + reportedGene);
                     }
-
                 }
                 else {
                     getLog().error("Reported gene check for " + reportedGene + " returned no result");
                 }
             }
         }
+        return null;
     }
 
 
