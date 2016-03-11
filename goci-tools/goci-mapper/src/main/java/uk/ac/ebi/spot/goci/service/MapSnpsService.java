@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -94,36 +93,17 @@ public class MapSnpsService {
             snp.setLastUpdateDate(new Date());
             singleNucleotidePolymorphismRepository.save(snp);
 
-            // TODO DOING SNP PER SNP SO DONT NEED TO FLATTEN
-            // Store location information for SNP
-            if (!locations.isEmpty()) {
-                for (Location location : locations) {
-
-                    // Next time we see SNP, add location to set
-                    // This would only occur is SNP has multiple locations
-                    if (snpToLocationsMap.containsKey(snpRsId)) {
-                        snpToLocationsMap.get(snpRsId).add(location);
-                    }
-
-                    // First time we see a SNP store the location
-                    else {
-                        Set<Location> snpLocation = new HashSet<>();
-                        snpLocation.add(location);
-                        snpToLocationsMap.put(snpRsId, snpLocation);
-                    }
-                }
+            // Save data
+            if (!snpToLocationsMap.isEmpty()) {
+                getLog().debug("Updating location details ...");
+                snpLocationMappingService.storeSnpLocation(snpRsId, locations);
+                getLog().debug("Updating location details complete");
             }
             else {
                 getLog().warn("Attempt to map SNP: " + snpRsId + " returned no location details");
                 pipelineErrors.add("Attempt to map SNP: " + snpRsId + " returned no location details");
             }
 
-            // Save data
-            if (!snpToLocationsMap.isEmpty()) {
-                getLog().debug("Updating location details ...");
-                snpLocationMappingService.storeSnpLocation(snpToLocationsMap);
-                getLog().debug("Updating location details complete");
-            }
             if (!snpGenomicContexts.isEmpty()) {
                 getLog().debug("Updating genomic context details ...");
                 //  TODO REFACTOR THIS METHOD AS THERE IS ONLY ONE SNP NOW

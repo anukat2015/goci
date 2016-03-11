@@ -59,23 +59,16 @@ public class SnpLocationMappingService {
         this.locationCreationService = locationCreationService;
     }
 
-    public void storeSnpLocation(Map<String, Set<Location>> snpToLocations) {
-
-        // Go through each rs_id and its associated locations returned from the mapping pipeline
-        for (String snpRsId : snpToLocations.keySet()) {
-
-            Set<Location> snpLocationsFromMapping = snpToLocations.get(snpRsId);
+    public void storeSnpLocation(String rsId, Collection<Location> locations) {
 
             // Check if the SNP exists
-            SingleNucleotidePolymorphism snpInDatabase =
-                    singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
+            SingleNucleotidePolymorphism snpInDatabase = singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(rsId);
 
             if (snpInDatabase != null) {
-
                 // Store all new location objects
                 Collection<Location> newSnpLocations = new ArrayList<>();
 
-                for (Location snpLocationFromMapping : snpLocationsFromMapping) {
+                for (Location snpLocationFromMapping : locations) {
 
                     String chromosomeNameFromMapping = snpLocationFromMapping.getChromosomeName();
                     if (chromosomeNameFromMapping != null) {
@@ -125,8 +118,7 @@ public class SnpLocationMappingService {
                     snpInDatabase.setLastUpdateDate(new Date());
                     singleNucleotidePolymorphismRepository.save(snpInDatabase);
                 }
-                else {getLog().warn("No new locations to add to " + snpRsId);}
-
+                else {getLog().warn("No new locations to add to " + rsId);}
             }
 
             // SNP doesn't exist, this should be extremely rare as SNP value is a copy
@@ -134,12 +126,10 @@ public class SnpLocationMappingService {
             // by the time mapping is started should already have been saved
             else {
                 // TODO WHAT WILL HAPPEN FOR MERGED SNPS
-                getLog().error("Adding location for SNP not found in database, RS_ID:" + snpRsId);
-                throw new RuntimeException("Adding location for SNP not found in database, RS_ID: " + snpRsId);
+                getLog().error("Adding location for SNP not found in database, RS_ID:" + rsId);
+                throw new RuntimeException("Adding location for SNP not found in database, RS_ID: " + rsId);
 
             }
-
-        }
     }
 
     /**
