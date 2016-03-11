@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
@@ -23,6 +24,8 @@ import java.util.Set;
  * Created by emma on 11/03/2016.
  *
  * @author emma
+ *         <p>
+ *         Ssrvice that maps a selection of SNPs
  */
 @Service
 public class MapSnpsService {
@@ -38,9 +41,22 @@ public class MapSnpsService {
         return log;
     }
 
-    public Map<SingleNucleotidePolymorphism, Collection<String>> mapSnps(Collection<SingleNucleotidePolymorphism> snps) throws EnsemblMappingException {
+    @Autowired
+    public MapSnpsService(EnsemblMappingPipeline ensemblMappingPipeline,
+                          SnpLocationMappingService snpLocationMappingService,
+                          SnpGenomicContextMappingService snpGenomicContextMappingService,
+                          SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository) {
+        this.ensemblMappingPipeline = ensemblMappingPipeline;
+        this.snpLocationMappingService = snpLocationMappingService;
+        this.snpGenomicContextMappingService = snpGenomicContextMappingService;
+        this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
+    }
 
-        Map<SingleNucleotidePolymorphism, Collection<String>> snpToMappingErrors = new HashMap<>();
+    public Map<Long, Collection<String>> mapSnps(Collection<SingleNucleotidePolymorphism> snps)
+            throws EnsemblMappingException {
+
+        // Store any mapping errors
+        Map<Long, Collection<String>> snpIdToMappingErrors = new HashMap<>();
 
         for (SingleNucleotidePolymorphism snp : snps) {
 
@@ -63,7 +79,6 @@ public class MapSnpsService {
                                        " whilst trying to run mapping of SNP " + snpRsId, e);
                 throw new EnsemblMappingException();
             }
-
             getLog().debug("Mapping complete");
 
             Collection<Location> locations = ensemblMappingResult.getLocations();
@@ -79,6 +94,7 @@ public class MapSnpsService {
             snp.setLastUpdateDate(new Date());
             singleNucleotidePolymorphismRepository.save(snp);
 
+            // TODO DOING SNP PER SNP SO DONT NEED TO FLATTEN
             // Store location information for SNP
             if (!locations.isEmpty()) {
                 for (Location location : locations) {
@@ -118,7 +134,11 @@ public class MapSnpsService {
                 getLog().warn("Attempt to map SNP: " + snpRsId + " returned no mapped genes");
                 pipelineErrors.add("Attempt to map SNP: " + snpRsId + " returned no mapped genes");
             }
+
+            // TODO COLLATE ALL ERRORS, WHAT IF WE SAW SAME SNP TWICE IN DB
+            // Add errors to map
+            snpIdToMappingErrors.put(snp.getId(), pipelineErrors);
         }
-        return snpToMappingErrors;
+        return snpIdToMappingErrors;
     }
 }
