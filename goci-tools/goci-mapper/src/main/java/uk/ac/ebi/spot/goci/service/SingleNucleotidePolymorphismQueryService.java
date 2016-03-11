@@ -49,6 +49,14 @@ public class SingleNucleotidePolymorphismQueryService {
         return snpsLinkedToLocus;
     }
 
+    @Transactional(readOnly = true)
+    public Collection<SingleNucleotidePolymorphism> findAll() {
+        Collection<SingleNucleotidePolymorphism> allSnps =
+                singleNucleotidePolymorphismRepository.findAll();
+        allSnps.forEach(this::loadAssociatedData);
+        return allSnps;
+    }
+
     public void loadAssociatedData(SingleNucleotidePolymorphism snp) {
 
         if (snp.getLocations() != null) {
