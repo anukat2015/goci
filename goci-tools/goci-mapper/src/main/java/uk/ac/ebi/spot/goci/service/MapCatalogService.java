@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by emma on 05/02/2016.
@@ -26,7 +29,9 @@ public class MapCatalogService {
     // Services
     private AssociationQueryService associationService;
     private MappingErrorComparisonService mappingErrorComparisonService;
-    private MappingService mappingService;
+    private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
+    private MapSnpsService mapSnpsService;
+    private CheckAuthorReportedGenesService checkAuthorReportedGenesService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -38,11 +43,15 @@ public class MapCatalogService {
     public MapCatalogService(AssociationReportRepository associationReportRepository,
                              AssociationQueryService associationService,
                              MappingErrorComparisonService mappingErrorComparisonService,
-                             MappingService mappingService) {
+                             SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService,
+                             MapSnpsService mapSnpsService,
+                             CheckAuthorReportedGenesService checkAuthorReportedGenesService) {
         this.associationReportRepository = associationReportRepository;
         this.associationService = associationService;
         this.mappingErrorComparisonService = mappingErrorComparisonService;
-        this.mappingService = mappingService;
+        this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
+        this.mapSnpsService = mapSnpsService;
+        this.checkAuthorReportedGenesService = checkAuthorReportedGenesService;
     }
 
     /**
@@ -52,17 +61,32 @@ public class MapCatalogService {
      */
     public void mapCatalogContents(String performer) throws EnsemblMappingException {
 
+        // Map to store any errors from mapping
+        Map<SingleNucleotidePolymorphism, Collection<String>> snpToMappingErrors = new HashMap<>();
+
+        // Get all SNPs and map
+        Collection<SingleNucleotidePolymorphism> allSnps = singleNucleotidePolymorphismQueryService.findAll();
+        getLog().info("Mapping all SNPs in database, total number: " + allSnps.size());
+
+        try {
+            snpToMappingErrors = mapSnpsService.mapSnps(allSnps);
+        }
+        catch (EnsemblMappingException e) {
+            throw new EnsemblMappingException("Attempt to map all SNPs failed", e);
+        }
+
         // Get all old association reports so we can compare with new ones, do this before we remap
+        // TODO CANDIDATE FOR ASYNC
         Collection<AssociationReport> oldAssociationReports = associationReportRepository.findAll();
 
         // Get all associations via service
+        // TODO HOW DO WE HANDLE ERRORS
         Collection<Association> associations = associationService.findAllAssociations();
-        getLog().info("Mapping all associations in database, total number: " + associations.size());
         try {
-            mappingService.validateAndMapAllAssociations(associations, performer);
+            checkAuthorReportedGenesService.checkAuthorReportedGenes(associations);
         }
         catch (EnsemblMappingException e) {
-            throw new EnsemblMappingException("Attempt to map all associations failed", e);
+            throw new EnsemblMappingException("Attempt check author reported genes for all associations failed", e);
         }
         mappingErrorComparisonService.compareOldVersusNewErrors(oldAssociationReports);
     }
