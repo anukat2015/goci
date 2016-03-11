@@ -32,18 +32,24 @@ public class CheckAuthorReportedGenesService {
         return log;
     }
 
-    public void checkAuthorReportedGenes(Collection<Association> associations) throws EnsemblMappingException {
-        for (Association association : associations) { runCheck(association); }
+    public ArrayList<String> checkAuthorReportedGenes(Association association)
+            throws EnsemblMappingException {
+
+        return runCheck(association);
     }
 
-    private void runCheck(Association association) throws EnsemblMappingException {
+    private ArrayList<String> runCheck(Association association) throws EnsemblMappingException {
+
+        ArrayList<String> associationMappingErrors = new ArrayList<>();
 
         for (Locus associationLocus : association.getLoci()) {
             Long locusId = associationLocus.getId();
 
+            // Get SNPs
             Collection<SingleNucleotidePolymorphism> snpsLinkedToLocus =
                     singleNucleotidePolymorphismQueryService.findByRiskAllelesLociId(locusId);
 
+            // Get author reported genes
             Collection<Gene> authorReportedGenesLinkedToSnp = associationLocus.getAuthorReportedGenes();
 
             // Get gene names
@@ -54,31 +60,21 @@ public class CheckAuthorReportedGenesService {
 
             // Pass rs_id and author reported genes to mapping component
             for (SingleNucleotidePolymorphism snpLinkedToLocus : snpsLinkedToLocus) {
-
-                String snpRsId = snpLinkedToLocus.getRsId();
-
+                ArrayList<String> snpErrors = new ArrayList<>();
 
                 // Try to map supplied data
                 try {
-                    getLog().debug("Running mapping....");
-
-                    ensemblMappingPipeline.runAuthorReportedGenesCheck(authorReportedGeneNamesLinkedToSnp,
-                                                                       snpLinkedToLocus.getLocations());
+                    snpErrors = ensemblMappingPipeline.runAuthorReportedGenesCheck(authorReportedGeneNamesLinkedToSnp,
+                                                                                   snpLinkedToLocus.getLocations());
                 }
                 catch (Exception e) {
                     getLog().error("Encountered a " + e.getClass().getSimpleName() +
-                                           " whilst trying to run mapping of SNP " + snpRsId, e);
+                                           " whilst trying to check author reported genes for SNP " + snpLinkedToLocus.getRsId(), e);
                     throw new EnsemblMappingException();
                 }
-
-                getLog().debug("Mapping complete");
-
-
+                associationMappingErrors.addAll(snpErrors);
             }
-
-            // Collection to store all errors for one association
-            Collection<String> associationPipelineErrors = ensemblMappingPipeline.runAuthorReportedGenesCheck();
-
         }
+        return associationMappingErrors;
     }
 }
