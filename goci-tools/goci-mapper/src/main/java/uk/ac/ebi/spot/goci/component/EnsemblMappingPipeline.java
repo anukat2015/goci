@@ -16,9 +16,9 @@ import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Region;
-import uk.ac.ebi.spot.goci.model.RestResponseResult;
+import uk.ac.ebi.spot.goci.mapper.model.RestResponseResult;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.service.EnsemblRestService;
+import uk.ac.ebi.spot.goci.mapper.service.EnsemblRestService;
 
 import java.util.ArrayList;
 import java.util.Arrays;

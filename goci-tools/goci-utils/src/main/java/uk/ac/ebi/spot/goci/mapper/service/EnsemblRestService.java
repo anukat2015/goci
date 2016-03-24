@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.service;
+package uk.ac.ebi.spot.goci.mapper.service;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
-import uk.ac.ebi.spot.goci.model.RestResponseResult;
+import uk.ac.ebi.spot.goci.mapper.exception.EnsemblRestIOException;
+import uk.ac.ebi.spot.goci.mapper.model.RestResponseResult;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

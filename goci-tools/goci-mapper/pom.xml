@@ -52,11 +52,7 @@
             <version>20141113</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.mashape.unirest</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>1.4.6</version>
-        </dependency>
+
     </dependencies>
 
 
