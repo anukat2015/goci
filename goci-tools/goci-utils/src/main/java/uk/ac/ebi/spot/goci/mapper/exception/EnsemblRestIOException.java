@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.exception;
+package uk.ac.ebi.spot.goci.mapper.exception;
 
 import java.util.ArrayList;
 import java.util.List;

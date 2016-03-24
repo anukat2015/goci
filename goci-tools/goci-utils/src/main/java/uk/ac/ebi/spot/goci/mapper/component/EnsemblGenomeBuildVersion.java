@@ -1,12 +1,12 @@
-package uk.ac.ebi.spot.goci.component;
+package uk.ac.ebi.spot.goci.mapper.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
-import uk.ac.ebi.spot.goci.model.EnsemblGenomeBuildVersionJson;
+import uk.ac.ebi.spot.goci.mapper.exception.EnsemblRestIOException;
+import uk.ac.ebi.spot.goci.mapper.model.EnsemblGenomeBuildVersionJson;
 
 import javax.validation.constraints.NotNull;
 

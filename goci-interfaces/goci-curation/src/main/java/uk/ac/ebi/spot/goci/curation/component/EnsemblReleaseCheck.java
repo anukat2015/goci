@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import uk.ac.ebi.spot.goci.component.EnsemblDbsnpVersion;
-import uk.ac.ebi.spot.goci.component.EnsemblGenomeBuildVersion;
-import uk.ac.ebi.spot.goci.component.EnsemblRelease;
+import uk.ac.ebi.spot.goci.mapper.component.EnsemblDbsnpVersion;
+import uk.ac.ebi.spot.goci.mapper.component.EnsemblGenomeBuildVersion;
+import uk.ac.ebi.spot.goci.mapper.component.EnsemblRelease;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
-import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
-import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
+import uk.ac.ebi.spot.goci.mapper.exception.EnsemblMappingException;
+import uk.ac.ebi.spot.goci.mapper.exception.EnsemblRestIOException;
 import uk.ac.ebi.spot.goci.model.MappingMetadata;
 import uk.ac.ebi.spot.goci.repository.MappingMetadataRepository;
 

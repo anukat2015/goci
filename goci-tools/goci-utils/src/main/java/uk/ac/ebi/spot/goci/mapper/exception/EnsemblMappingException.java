@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.exception;
+package uk.ac.ebi.spot.goci.mapper.exception;
 
 /**
  * Created by emma on 07/01/2016.

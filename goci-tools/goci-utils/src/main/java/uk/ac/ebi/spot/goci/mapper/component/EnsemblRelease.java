@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.component;
+package uk.ac.ebi.spot.goci.mapper.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

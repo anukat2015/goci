@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.model;
+package uk.ac.ebi.spot.goci.mapper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

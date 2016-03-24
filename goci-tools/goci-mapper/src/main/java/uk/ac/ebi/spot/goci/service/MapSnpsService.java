@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
-import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
+import uk.ac.ebi.spot.goci.mapper.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.EnsemblMappingResult;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.Location;
@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by emma on 11/03/2016.
@@ -59,11 +58,6 @@ public class MapSnpsService {
 
         for (SingleNucleotidePolymorphism snp : snps) {
 
-            // Map to store returned location data, this is used in
-            // snpLocationMappingService to process all locations linked
-            // to a single snp in one go
-            Map<String, Set<Location>> snpToLocationsMap = new HashMap<>();
-
             String snpRsId = snp.getRsId();
             EnsemblMappingResult ensemblMappingResult = new EnsemblMappingResult();
 
@@ -84,6 +78,7 @@ public class MapSnpsService {
             Collection<GenomicContext> snpGenomicContexts = ensemblMappingResult.getGenomicContexts();
             ArrayList<String> pipelineErrors = ensemblMappingResult.getPipelineErrors();
 
+            //TODO REFACTOR THESE
             // First remove old locations and genomic contexts
             snpLocationMappingService.removeExistingSnpLocations(snp);
             snpGenomicContextMappingService.removeExistingGenomicContexts(snp);
@@ -94,7 +89,7 @@ public class MapSnpsService {
             singleNucleotidePolymorphismRepository.save(snp);
 
             // Save data
-            if (!snpToLocationsMap.isEmpty()) {
+            if (!locations.isEmpty()) {
                 getLog().debug("Updating location details ...");
                 snpLocationMappingService.storeSnpLocation(snpRsId, locations);
                 getLog().debug("Updating location details complete");
